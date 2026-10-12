@@ -25,6 +25,6 @@ def main():
     template=(ROOT/'src/dashboard_template.html').read_text()
     encoded=json.dumps(payload,ensure_ascii=False).replace('</','<\\/')
     (folder/'index.html').write_text(template.replace('__DATA__',encoded).replace('__ORIGEN_AVISO__',html.escape(aviso)))
-    print('Dashboard listo:',folder/'index.html')
+    print('Dashboard listo:',(folder/'index.html').relative_to(ROOT))
 
 if __name__=='__main__': main()

@@ -1,9 +1,11 @@
 """30 figuras estáticas y 30 figuras Plotly, con resultados calculados y trazabilidad."""
 from pathlib import Path
-import os, json, calendar
+import os, json, calendar, warnings
 os.environ.setdefault('MPLCONFIGDIR',str(Path(__file__).resolve().parents[1]/'.mplcache'))
 import matplotlib
 matplotlib.use('Agg')
+# Aviso cosmético de una figura sin ejes (red de sensores); no afecta el resultado.
+warnings.filterwarnings('ignore', message='constrained_layout not applied')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, PathPatch
 from matplotlib.path import Path as MPath
