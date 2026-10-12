@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "checks": {
+    "uniones_northwind_sin_multiplicar_lineas": true,
+    "clave_linea_unica": true,
+    "formula_neta": true,
+    "ventas_reconcilian_mes_cliente_categoria": true,
+    "descuentos_validos": true,
+    "empleados_conservados": true,
+    "supervisores_existen": true,
+    "organigrama_sin_ciclos": true,
+    "salarios_positivos": true,
+    "clave_sensor_tiempo_unica": true,
+    "lecturas_sin_nulos_criticos": true,
+    "muestreo_completo": true,
+    "score_mad_finito": true,
+    "regla_alertas_reproduce": true,
+    "matriz_confusion_reconcilia": true,
+    "treinta_visualizaciones": true,
+    "archivos_figuras_validos": true
+  },
+  "failed": [],
+  "scope": "Datos y archivos locales; no valida ejecución SQL/Oracle/MongoDB ni conexiones."
+}

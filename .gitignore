@@ -1,0 +1,14 @@
+config/.env
+docker/.env
+.venv/
+.mplcache/
+.jupyter/
+__pycache__/
+.DS_Store
+entrega/
+.Rhistory
+# Capturas originales de pantalla completa (las recortadas están en informe/recursos)
+captures/
+# Generados: paquete de entrega y auxiliares del índice del informe
+MANIFEST.sha256
+informe/salida/*.json

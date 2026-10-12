@@ -1,0 +1,5 @@
+[HR_ODBC]
+Driver=Oracle Instant Client ODBC
+ServerName=localhost:1521/FREEPDB1
+# Registrar Driver en odbcinst.ini con la ruta de libsqora del cliente instalado.
+# Ajustar FREEPDB1 al nombre real del servicio de Oracle.

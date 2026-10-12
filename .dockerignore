@@ -1,0 +1,15 @@
+.git
+.venv
+.mplcache
+.jupyter
+__pycache__
+**/__pycache__
+**/.env
+**/.DS_Store
+data
+figuras
+dashboard
+docs
+evidencias
+*.ipynb
+MANIFEST.sha256

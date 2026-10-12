@@ -1,0 +1,26 @@
+[
+  {
+    "motor": "sqlserver",
+    "connector": "ODBC",
+    "timestamp_utc": "2026-10-12T00:41:35.696455+00:00",
+    "verified": true,
+    "database": "Northwind",
+    "orders": 830
+  },
+  {
+    "motor": "oracle",
+    "connector": "ODBC",
+    "timestamp_utc": "2026-10-12T00:41:35.780996+00:00",
+    "verified": true,
+    "schema": "HR",
+    "employees": 107
+  },
+  {
+    "motor": "mongodb",
+    "connector": "PyMongo",
+    "timestamp_utc": "2026-10-12T00:41:35.986975+00:00",
+    "verified": true,
+    "database": "bigdata_final",
+    "documents": 12960
+  }
+]

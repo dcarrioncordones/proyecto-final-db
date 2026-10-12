@@ -1,0 +1,272 @@
+[
+  {
+    "id": "N01",
+    "title": "Ventas mensuales y tendencia",
+    "method": "Se suma precio de línea × cantidad × (1 - descuento) por mes. La tendencia promedia tres observaciones mensuales consecutivas; conserva los períodos parciales y requiere tres observaciones.",
+    "insight": "El total neto es 1,265,793.04; el máximo mensual corresponde a 1998-04, con 123,798.68.",
+    "decision": "Ajustar inventario y capacidad para meses de mayor demanda, confirmando el patrón con un período más amplio.",
+    "limit": "Julio de 1996 y mayo de 1998 son períodos parciales. Las ventas no incluyen flete, impuestos ni costos. No se interpreta el último mes como caída económica.",
+    "code": "monthly = d.groupby('month').net.sum()\ntrend = monthly.rolling(3, min_periods=3).mean()"
+  },
+  {
+    "id": "N02",
+    "title": "Mapa de calor: categoría y país",
+    "method": "Se cruzan categorías con los ocho países con mayor venta neta. El color representa importe en miles; país es el domicilio del cliente.",
+    "insight": "Beverages lidera por categoría con 267,868.18, equivalente al 21.2% del total.",
+    "decision": "Adaptar el portafolio a las combinaciones de mercado y categoría con mayor facturación.",
+    "limit": "No se incluye el resto de países en la matriz. Una celda elevada puede resultar de pocos pedidos grandes; no equivale a mayor penetración de mercado.",
+    "code": "d.pivot_table(index='CategoryName', columns='Country',\n              values='net', aggfunc='sum', fill_value=0)"
+  },
+  {
+    "id": "N03",
+    "title": "Top 10 clientes por volumen monetario",
+    "method": "Se agrupan las líneas por cliente y se ordena la suma de venta neta. Volumen se define aquí como importe, no unidades.",
+    "insight": "QUICK-Stop encabeza las compras con 110,277.30. Los diez primeros concentran 45.0% de las ventas.",
+    "decision": "Diseñar seguimiento de cuentas clave y evaluar riesgo de concentración.",
+    "limit": "El ranking histórico no mide fidelidad ni valor futuro. Dos clientes del catálogo no tienen pedidos y aportan cero al análisis comercial.",
+    "code": "clients = d.groupby('CompanyName').net.sum().nlargest(10)"
+  },
+  {
+    "id": "N04",
+    "title": "Evolución de ventas trimestrales",
+    "method": "Cada pedido se asigna al trimestre de OrderDate; la suma se calcula a partir de líneas, sin multiplicar pedidos por uniones adicionales.",
+    "insight": "El trimestre de mayor importe es 1998Q1, con 298,491.55.",
+    "decision": "Comparar los trimestres completos de 1997 antes de utilizar la serie para presupuestar.",
+    "limit": "1996-Q3 y 1998-Q2 tienen cobertura parcial. Una diferencia de duración impide compararlos directamente con trimestres completos.",
+    "code": "q = d.assign(quarter=d.OrderDate.dt.to_period('Q').astype(str))\nq = q.groupby('quarter').net.sum()"
+  },
+  {
+    "id": "N05",
+    "title": "Treemap de productos por categoría",
+    "method": "Cada área es proporcional a venta neta. Los productos se anidan en sus categorías; el dashboard permite abrir cada categoría.",
+    "insight": "Côte de Blaye aporta 141,396.73, el mayor importe de un producto de la muestra.",
+    "decision": "Priorizar disponibilidad de productos de gran contribución y contrastar su margen cuando se disponga de costos.",
+    "limit": "La muestra no contiene costo de compra ni utilidad. Este gráfico mide contribución a ingresos y no rentabilidad.",
+    "code": "prod = d.groupby(['CategoryName','ProductName'], as_index=False).net.sum()\npx.treemap(prod, path=['CategoryName','ProductName'], values='net')"
+  },
+  {
+    "id": "N06",
+    "title": "Dispersión: descuento y cantidad",
+    "method": "Cada punto corresponde a una línea. Se calcula Pearson entre descuento fraccional y cantidad; los descuentos repetidos producen columnas de puntos.",
+    "insight": "La correlación observada es r = 0.129 en 2,155 líneas.",
+    "decision": "Explorar descuentos por producto y cliente antes de evaluar una política promocional.",
+    "limit": "Una asociación no prueba que el descuento cause más ventas. Mezcla categorías, productos y condiciones de compra.",
+    "code": "r = d.Discount.corr(d.Quantity)\npx.scatter(d, x='Discount', y='Quantity', color='CategoryName')"
+  },
+  {
+    "id": "N07",
+    "title": "Distribución de países de clientes",
+    "method": "Se cuenta cada CustomerID del catálogo una vez. Los siete países con más clientes se muestran por separado y los demás se agrupan en Otros.",
+    "insight": "Hay 91 clientes de 21 países. USA tiene 13 clientes (14.3%).",
+    "decision": "Usar la distribución para contextualizar la cobertura comercial junto con importes de venta.",
+    "limit": "Representa clientes registrados; no población, participación de mercado ni clientes activos. Otros combina países distintos.",
+    "code": "c = customers.groupby('Country').size()"
+  },
+  {
+    "id": "N08",
+    "title": "Box plot de precios por proveedor",
+    "method": "Se usa Products.UnitPrice, distinto del precio histórico de cada venta. Se eligen ocho proveedores por cantidad de productos y se muestran mediana, cuartiles y puntos extremos.",
+    "insight": "El catálogo contiene 77 productos y 29 proveedores; el precio mediano es 19.50.",
+    "decision": "Revisar proveedores con dispersión elevada para entender mezcla y posicionamiento del portafolio.",
+    "limit": "Las muestras por proveedor son pequeñas y las categorías difieren. Un precio extremo no es automáticamente un error.",
+    "code": "sub = products.merge(suppliers, on='SupplierID')\npx.box(sub, x='UnitPrice', y='CompanyName', points='all')"
+  },
+  {
+    "id": "N09",
+    "title": "Áreas: ventas acumuladas por empleado",
+    "method": "Se suman las ventas por empleado y mes, se completan celdas ausentes con cero y se aplica acumulado temporal. Las áreas se apilan; el valor individual es el espesor de cada banda.",
+    "insight": "Margaret Peacock registra 232,890.85, equivalente al 18.4% del importe neto.",
+    "decision": "Combinar la contribución con número de pedidos, cartera asignada y metas para evaluar desempeño.",
+    "limit": "La posición superior de una banda no representa su valor individual. Las ventas no miden productividad ajustada por oportunidades.",
+    "code": "emp = d.pivot_table(index='month', columns='employee',\n values='net', aggfunc='sum', fill_value=0).cumsum()"
+  },
+  {
+    "id": "N10",
+    "title": "Heatmap temporal de pedidos",
+    "method": "Se cuenta Orders.OrderID en la tabla de pedidos, una sola vez, por mes y día de semana. Se incluyen fines de semana con cero.",
+    "insight": "Hay 830 pedidos únicos. Mar acumula 168 pedidos, el mayor conteo por día de semana.",
+    "decision": "Planificar personal para los días con más actividad de registro, contrastando pedidos y tiempo de procesamiento.",
+    "limit": "El conteo agregado no ajusta por cuántas veces aparece cada día en cada mes. No representa hora de compra ni fecha de entrega.",
+    "code": "orders.groupby([orders.OrderDate.dt.to_period('M'),\n                orders.OrderDate.dt.dayofweek]).size()"
+  },
+  {
+    "id": "H01",
+    "title": "Histograma salarial por departamento",
+    "method": "La versión estática superpone cuatro departamentos por tamaño. La versión interactiva permite mostrar u ocultar todos los departamentos desde la leyenda.",
+    "insight": "Los 107 empleados tienen salario mediano 6,200.00, promedio 6,461.83 y máximo 24,000.00.",
+    "decision": "Revisar bandas de compensación por puesto y departamento antes de explicar diferencias.",
+    "limit": "HR es una muestra académica y documenta salarios mensuales. La moneda no se atribuye; la dispersión no permite inferir discriminación o desempeño.",
+    "code": "px.histogram(h, x='salary', color='department_name',\n             nbins=12, barmode='overlay')"
+  },
+  {
+    "id": "H02",
+    "title": "Radar de perfiles de puesto",
+    "method": "Se comparan cuatro puestos por tamaño. Salario medio, antigüedad media y plantilla se dividen por el máximo de cada variable en todos los puestos.",
+    "insight": "Sales Representative es el puesto de mayor dotación entre los perfiles mostrados: 30 empleados.",
+    "decision": "Comparar dimensiones organizacionales y utilizar hover para inspeccionar perfiles relativos.",
+    "limit": "No existen evaluaciones de competencias en HR. El radar es un perfil estructural y no mide habilidad, calidad de trabajo ni puntuación de desempeño.",
+    "code": "metrics = h.groupby('job_title').agg(\n Salario=('salary','mean'), Antigüedad=('tenure','mean'),\n Plantilla=('employee_id','size'))\nnormalized = metrics / metrics.max()"
+  },
+  {
+    "id": "H03",
+    "title": "Organigrama interactivo",
+    "method": "Se construye un árbol a partir de employee_id y manager_id. Se dibujan todos los empleados; el dashboard muestra nombre y puesto al pasar el cursor.",
+    "insight": "La estructura contiene 107 nodos, 106 relaciones y 1 raíz. La profundidad máxima es 3 enlaces.",
+    "decision": "Inspeccionar amplitud de supervisión y cadenas de reporte antes de proponer cambios de estructura.",
+    "limit": "Una relación jerárquica no indica carga de trabajo ni autoridad informal. La coordenada horizontal sólo separa ramas del árbol.",
+    "code": "edges = h[['employee_id','manager_id']].dropna()\n# Posiciones calculadas por recorrido del árbol; hover por empleado."
+  },
+  {
+    "id": "H04",
+    "title": "Mapa de calor de dotación por ubicación",
+    "method": "Se une employees con departments, locations, countries y regions mediante uniones izquierdas. Los empleados sin departamento conservan una categoría explícita.",
+    "insight": "South San Francisco concentra 45 empleados. Hay 1 empleado sin ubicación derivable.",
+    "decision": "Identificar ubicaciones con concentración de personal y revisar registros sin asignación organizacional.",
+    "limit": "La densidad aquí es un conteo, no empleados por superficie. La ubicación corresponde al departamento y no al domicilio personal.",
+    "code": "h.groupby(['city','department_name']).size().unstack(fill_value=0)"
+  },
+  {
+    "id": "H05",
+    "title": "Violín salarial por antigüedad",
+    "method": "La antigüedad se calcula entre hire_date y 08/10/2026, en días / 365.25. Se crean tres bandas y se muestra una densidad estimada con mediana.",
+    "insight": "La antigüedad mediana es 10.76 años. Las bandas contienen Menos de 9 años: 17, 9 a menos de 12: 66, 12 años o más: 24.",
+    "decision": "Comparar salarios dentro del mismo puesto antes de interpretar el efecto de la antigüedad.",
+    "limit": "La antigüedad en la empresa no equivale a experiencia profesional total. La densidad depende de la muestra y del suavizado.",
+    "code": "h['tenure'] = (pd.Timestamp('2026-10-08') - h.hire_date).dt.days / 365.25\npx.violin(h, x='level', y='salary', box=True)"
+  },
+  {
+    "id": "H06",
+    "title": "Sankey de cambios de departamento",
+    "method": "Por empleado se ordena job_history por start_date. Cada departamento se conecta con el siguiente registro y, al final, con el departamento actual. Los lados separan estado anterior y posterior.",
+    "insight": "Se reconstruyen 10 transiciones: 4 cambian de departamento y 6 permanecen en el mismo. El histórico contiene 7 empleados.",
+    "decision": "Usar el flujo para formular preguntas sobre movilidad interna y cambios de puesto.",
+    "limit": "No existen bajas ni una población histórica completa. No se estima rotación de salida; un enlace al estado actual no documenta su fecha exacta.",
+    "code": "seq = historial.sort_values('start_date').department_id.tolist()\nseq += [departamento_actual]\ntransiciones = list(zip(seq, seq[1:]))"
+  },
+  {
+    "id": "H07",
+    "title": "Burbujas: salario y antigüedad",
+    "method": "Cada punto es un empleado. El área de burbuja representa tamaño del departamento; el color representa departamento. Las coordenadas son antigüedad y salario.",
+    "insight": "La correlación de Pearson entre antigüedad y salario es 0.415.",
+    "decision": "Examinar casos de compensación alta o baja dentro de grupos de puestos comparables.",
+    "limit": "El área repite el tamaño del departamento para cada empleado y no debe sumarse. La correlación está afectada por puesto, jerarquía y composición.",
+    "code": "h['department_size'] = h.department_name.map(h.department_name.value_counts())\npx.scatter(h, x='tenure', y='salary', size='department_size',\n           color='department_name')"
+  },
+  {
+    "id": "H08",
+    "title": "Densidad de contrataciones por mes",
+    "method": "Se combinan meses de contratación de todos los años. La curva aplica KDE con ancho relativo 0.25; es una aproximación suavizada de una variable discreta.",
+    "insight": "El mes con más contrataciones observadas es 3, con 17 empleados del catálogo actual.",
+    "decision": "Examinar el conteo por año y mes antes de atribuir estacionalidad al proceso de contratación.",
+    "limit": "Enero y diciembre son adyacentes en un calendario, pero esta KDE no es circular. Sólo incluye empleados actuales y no permite estimar tasa histórica de contratación.",
+    "code": "months = h.hire_date.dt.month\nkde = gaussian_kde(months, bw_method=0.25)"
+  },
+  {
+    "id": "H09",
+    "title": "Donut de empleados por región",
+    "method": "Cada empleado se asigna a la región de su departamento mediante la cadena de ubicaciones. Se conserva Sin región para el registro sin departamento.",
+    "insight": "Americas concentra 70 de 107 empleados (65.4%).",
+    "decision": "Evaluar concentración territorial del catálogo organizacional y calidad de asignaciones.",
+    "limit": "La región es una categoría geográfica corporativa de esta versión de HR. No aporta nacionalidad, edad, sexo ni otras variables demográficas personales.",
+    "code": "h.region_name.fillna('Sin región').value_counts()"
+  },
+  {
+    "id": "H10",
+    "title": "Waterfall de bandas salariales: escenario ilustrativo",
+    "method": "Se encadenan el mínimo y máximo de IT_PROG y los máximos de AD_VP y AD_PRES. Cada escalón representa diferencia entre límites de bandas definidos en jobs.",
+    "insight": "El escenario va de 4,000.00 a 40,000.00; la diferencia es 36,000.00.",
+    "decision": "Ilustrar cómo se comparan bandas de puestos; reemplazarlo por un historial real si se desea analizar progresión de una carrera.",
+    "limit": "No representa ascensos observados, salarios pasados ni trayectoria de un empleado. La secuencia de puestos es hipotética y las bandas son datos oficiales.",
+    "code": "jobs = read('hr_jobs').set_index('job_id')\nlimits = [jobs.loc['IT_PROG','min_salary'], jobs.loc['IT_PROG','max_salary'],\n          jobs.loc['AD_VP','max_salary'], jobs.loc['AD_PRES','max_salary']]"
+  },
+  {
+    "id": "S01",
+    "title": "Serie temporal de temperatura por ciudad",
+    "method": "Se promedian dos estaciones y 24 lecturas horarias por día y ciudad. La fecha se obtiene después de convertir UTC a America/Santo_Domingo.",
+    "insight": "Santo Domingo tiene la mayor temperatura media: 28.24 °C.",
+    "decision": "Inspeccionar cambios diarios y confirmar si responden a señales persistentes o a puntos anómalos.",
+    "limit": "Todas las lecturas son sintéticas; las diferencias entre ciudades se definieron en el generador y no describen el clima real.",
+    "code": "temp = s[s.type == 'temperatura']\ndaily = temp.groupby(['date','city'], as_index=False).value.mean()"
+  },
+  {
+    "id": "S02",
+    "title": "Mapa de calor geográfico de lecturas",
+    "method": "Se agregan lecturas por coordenada de estación. La figura estática ubica puntos coloreados en latitud/longitud; el dashboard muestra las estaciones en longitud/latitud con la misma escala, coloreadas por lecturas, sin depender de un mapa externo.",
+    "insight": "Las seis estaciones tienen 2,160 lecturas cada una; la cobertura de observación es uniforme.",
+    "decision": "Utilizar el mapa para reconocer distribución de estaciones y revisar diferencias de cobertura cuando se incorporen datos reales.",
+    "limit": "El mapa representa conteo y no temperatura. Las coordenadas de estaciones son ilustrativas; no corresponden a instalaciones verificadas.",
+    "code": "geo = s.groupby(['city','station','latitude','longitude'],\n as_index=False).agg(readings=('value','size'))"
+  },
+  {
+    "id": "S03",
+    "title": "Violines por tipo de sensor",
+    "method": "Se dibujan tres distribuciones en paneles con escalas y unidades independientes. Las colas incluyen anomalías inyectadas.",
+    "insight": "Las medianas son temperatura 27.23 °C, humedad 71.64% y CO2 449.10 ppm.",
+    "decision": "Comparar dispersión dentro de cada magnitud y revisar extremos con el detector robusto.",
+    "limit": "Las variables tienen unidades distintas. Las alturas entre paneles no deben compararse; la forma depende del ancho de suavizado.",
+    "code": "for typ in ['temperatura','humedad','co2']:\n    values = s.loc[s.type == typ, 'value']\n    # Un panel independiente y su unidad para cada magnitud."
+  },
+  {
+    "id": "S04",
+    "title": "Matriz de dispersión entre sensores",
+    "method": "Se alinea cada estación y timestamp antes de pivotar tipos. No se correlacionan listas de lecturas sin correspondencia temporal.",
+    "insight": "La correlación temperatura-humedad es -0.590; temperatura-CO2 es 0.341.",
+    "decision": "Inspeccionar dependencias y diferencias entre estaciones, y recalcular correlaciones excluyendo anomalías para analizar sensibilidad.",
+    "limit": "La relación inversa entre humedad y temperatura fue introducida por el generador. Los puntos extremos alteran Pearson y no constituyen evidencia física de campo.",
+    "code": "wide = s.pivot(index=['station','timestamp'],\n               columns='type', values='value')\ncorrelations = wide.corr()"
+  },
+  {
+    "id": "S05",
+    "title": "Áreas apiladas por ubicación",
+    "method": "Se apilan conteos diarios por ciudad. Se usa conteo para evitar sumar temperatura, humedad y CO2, magnitudes incompatibles.",
+    "insight": "Cada ciudad aporta 4,320 lecturas en 30 días; la participación diaria es 33.3% por ciudad.",
+    "decision": "Identificar pérdida de cobertura si una banda disminuye en un despliegue real.",
+    "limit": "La estabilidad procede del muestreo sintético uniforme. La suma representa eventos y no intensidad de una variable física.",
+    "code": "counts = s.groupby(['date','city']).size().unstack(fill_value=0)"
+  },
+  {
+    "id": "S06",
+    "title": "Detección de anomalías con MAD",
+    "method": "Por sensor y hora del día se calcula mediana y MAD. Se alerta si |valor - mediana| / (1.4826 × MAD) > 3.5. La etiqueta inyectada sólo se usa para evaluar.",
+    "insight": "En las 12,960 lecturas se detectan 137 alertas: 103 verdaderos positivos, 34 falsos positivos y 0 falsos negativos. Precisión 75.2%; sensibilidad 100.0%.",
+    "decision": "Revisar alertas antes de eliminar datos y calibrar el umbral con una ventana histórica independiente.",
+    "limit": "La referencia usa todo septiembre: es detección retrospectiva, no validación predictiva. En producción debe entrenarse sobre datos previos y controlar MAD igual a cero.",
+    "code": "s['score'] = abs(s.value - s.baseline) / (1.4826 * s.mad)\ns['detected'] = s.score > 3.5\n# injected_anomaly NO participa en la regla."
+  },
+  {
+    "id": "S07",
+    "title": "Calendario de patrones diarios",
+    "method": "Se suman alertas por día local y se organizan en semanas de lunes a domingo. Celdas fuera de septiembre permanecen vacías.",
+    "insight": "El mayor conteo corresponde al 2026-09-25: 9 alertas sobre 432 lecturas diarias.",
+    "decision": "Comparar alertas diarias con volumen de lecturas para localizar jornadas de revisión.",
+    "limit": "Sólo hay un mes de datos simulados. El máximo no confirma un patrón semanal estable ni una falla real.",
+    "code": "daily_alerts = s.groupby('date').detected.sum()\n# Matriz calendario con huecos fuera del mes."
+  },
+  {
+    "id": "S08",
+    "title": "Red de relaciones entre sensores",
+    "method": "Se crea un enlace entre dos sensores cuando comparten station. La posición es un diseño de red; no expresa coordenadas geográficas.",
+    "insight": "La red tiene 18 sensores, 18 relaciones y seis grupos de tres sensores.",
+    "decision": "Examinar qué magnitudes se observan conjuntamente y organizar validaciones por estación.",
+    "limit": "La relación es de co-localización definida en el esquema sintético. No representa conexiones físicas, tráfico de red ni causalidad.",
+    "code": "nodes = s[['sensor_id','station','type']].drop_duplicates()\n# Enlace sólo si dos nodos comparten station."
+  },
+  {
+    "id": "S09",
+    "title": "Dispersión 3D: valor, ubicación y tiempo",
+    "method": "Se usa sólo temperatura para mantener una unidad coherente. Se toma una fila de cada doce y se codifica la estación como índice categórico.",
+    "insight": "El gráfico contiene 360 puntos de 4,320 lecturas de temperatura.",
+    "decision": "Rotar y explorar el gráfico para localizar valores altos y comparar con las series temporales completas.",
+    "limit": "La distancia entre índices de estación no es distancia geográfica. El muestreo reduce carga y puede omitir anomalías; el detector utiliza todas las lecturas.",
+    "code": "sample = temp.iloc[::12].copy()\npx.scatter_3d(sample, x='elapsed', y='station_index', z='value',\n              color='city', hover_name='station')"
+  },
+  {
+    "id": "S10",
+    "title": "Dashboard de monitoreo simulado",
+    "method": "El dashboard incorpora controles de reproducir, pausar y reiniciar. Cada segundo agrega una lectura histórica de SDQ-1 a una ventana de 48 puntos.",
+    "insight": "La última lectura histórica de SDQ-1 es 27.89 °C, registrada el 30/09/2026 23:00.",
+    "decision": "Usar la reproducción para probar controles, alertas visuales y actualización de una serie antes de conectar un flujo real.",
+    "limit": "Un segundo de reproducción equivale a una hora histórica. No hay streaming desde MongoDB ni medición ambiental en vivo. El umbral de 35 °C es ilustrativo.",
+    "code": "history = temp[temp.station == 'SDQ-1']\n# JavaScript avanza una lectura por segundo y conserva 48 puntos."
+  }
+]

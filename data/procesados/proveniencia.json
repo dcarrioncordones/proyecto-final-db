@@ -1,0 +1,29 @@
+{
+  "mode": "muestras_oficiales_sin_conexion_a_motor; sensores_sinteticos",
+  "seed": 5122026,
+  "counts": {
+    "nw_Categories": 8,
+    "nw_Customers": 91,
+    "nw_Employees": 9,
+    "nw_Order Details": 2155,
+    "nw_Orders": 830,
+    "nw_Products": 77,
+    "nw_Shippers": 3,
+    "nw_Suppliers": 29,
+    "hr_regions": 5,
+    "hr_countries": 25,
+    "hr_locations": 23,
+    "hr_departments": 27,
+    "hr_jobs": 19,
+    "hr_employees": 107,
+    "hr_job_history": 10,
+    "sensores": 12960
+  },
+  "files": {
+    "instnwnd.sql": "3cc62b3fca6d244a47dbde698b809331e4f85988a0685b2b370717d431e94871",
+    "hr_populate.sql": "420375c58700178b74949ccfc1a7b22bc2fd305c486fc558fca43f8ce3ddc4df",
+    "hr_code.sql": "5604aae0d47585bba996a90eecc43f494d4c63de19b2b9db7afe5007d6f669f5",
+    "hr_install.sql": "c0cceb9da089a080beca372629964e6ed12ddf5e7011ab4cee5798a99b8d593f",
+    "hr_create.sql": "19bb40fdad9ff31b66aad4bb2eff1a13b730fec2f39eb13f25bd157c980e023f"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "sqlserver": {
+    "mode": "base_de_datos",
+    "timestamp_utc": "2026-10-12T00:41:37.201918+00:00",
+    "hashes": {
+      "nw_Orders.csv": "228dca53850e8a02a92803fa15b828a20fd23693d60ba37f5122992a8007c785",
+      "nw_Order_Details.csv": "bb8b496f41d0b94e724971f7a690507ec8439c4046e4693bd3cd7af48688ab3d",
+      "nw_Customers.csv": "53ee75e920f348a004c7bd8e7807e50600b694b32ced07543860e3e534c44895",
+      "nw_Products.csv": "c69ead094b9f456fd43eaf80dc4057f32ac69ba4dac570c3ffafe12a752f2a8e",
+      "nw_Categories.csv": "f940fbeb34a0b2f14184baff8b3661a00ae26163315ee19a4a51274bec3253cd",
+      "nw_Suppliers.csv": "9a14e20f9823dfdf0aacaeca540cba7e988a511978f17561898cf36ec00b7fcf",
+      "nw_Employees.csv": "6623e3801e89ff75ae10b34feb9ab2d6d9cdb146c08234c3c88248a1598ed219"
+    }
+  },
+  "oracle": {
+    "mode": "base_de_datos",
+    "timestamp_utc": "2026-10-12T00:41:37.878593+00:00",
+    "hashes": {
+      "hr_employees.csv": "c5ea02777d7e338da911184296ae3f1ed506892a74a5a00497ed8121d8e56c66",
+      "hr_departments.csv": "77285bd023c034ebd81ef97374e569dd75ba78e003d8cfdc8a294374f7bde326",
+      "hr_locations.csv": "b5673fed3f6d00dd2acecbf438ab0abf56188410d6455e4bc2da9f693010912e",
+      "hr_countries.csv": "f6e06724689dd32beff0dd4b2a859ba22d6241a4970aaef4a435960bda8dcba8",
+      "hr_regions.csv": "f8a8972ae5e00623f6a1e76e79aa91dff2a7f1e3ed159e83ed6237c643bfdde2",
+      "hr_jobs.csv": "19c0bbfb7ebac5a742af56e6bc8ec48de655a44e1884a0513c90fcddd277c7a1",
+      "hr_job_history.csv": "8e6f224a92c4e553a7807c5a4f86fdb8323ef5997b8123af93cf369d540c3115"
+    }
+  },
+  "mongodb": {
+    "mode": "base_de_datos",
+    "timestamp_utc": "2026-10-12T00:41:38.549971+00:00",
+    "hashes": {
+      "sensores.csv": "b35663a522a81d3352a59b922b3fc4351c7693bfc76d8cabfd7cd4d2d89073d5"
+    }
+  }
+}

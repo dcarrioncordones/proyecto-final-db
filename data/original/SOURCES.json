@@ -1,0 +1,27 @@
+{
+  "instnwnd.sql": {
+    "url": "https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/databases/northwind-pubs/instnwnd.sql",
+    "sha256": "3cc62b3fca6d244a47dbde698b809331e4f85988a0685b2b370717d431e94871",
+    "download_date": "2026-10-08"
+  },
+  "hr_populate.sql": {
+    "url": "https://raw.githubusercontent.com/oracle-samples/db-sample-schemas/main/human_resources/hr_populate.sql",
+    "sha256": "420375c58700178b74949ccfc1a7b22bc2fd305c486fc558fca43f8ce3ddc4df",
+    "download_date": "2026-10-08"
+  },
+  "hr_code.sql": {
+    "url": "https://raw.githubusercontent.com/oracle-samples/db-sample-schemas/main/human_resources/hr_code.sql",
+    "sha256": "5604aae0d47585bba996a90eecc43f494d4c63de19b2b9db7afe5007d6f669f5",
+    "download_date": "2026-10-08"
+  },
+  "hr_install.sql": {
+    "url": "https://raw.githubusercontent.com/oracle-samples/db-sample-schemas/main/human_resources/hr_install.sql",
+    "sha256": "c0cceb9da089a080beca372629964e6ed12ddf5e7011ab4cee5798a99b8d593f",
+    "download_date": "2026-10-08"
+  },
+  "hr_create.sql": {
+    "url": "https://raw.githubusercontent.com/oracle-samples/db-sample-schemas/main/human_resources/hr_create.sql",
+    "sha256": "19bb40fdad9ff31b66aad4bb2eff1a13b730fec2f39eb13f25bd157c980e023f",
+    "download_date": "2026-10-08"
+  }
+}

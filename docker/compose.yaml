@@ -1,0 +1,95 @@
+name: bigdata-final
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    container_name: bigdata-sqlserver
+    environment:
+      ACCEPT_EULA: "${MSSQL_ACCEPT_EULA:?Configura docker/.env}"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: "${SQL_PASSWORD:?Configura docker/.env}"
+    ports:
+      - "127.0.0.1:1434:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ../data/original:/datasets:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'tool=/opt/mssql-tools18/bin/sqlcmd; [ -x "$$tool" ] || tool=/opt/mssql-tools/bin/sqlcmd; SQLCMDPASSWORD="$$MSSQL_SA_PASSWORD" "$$tool" -S localhost -U sa -C -b -Q "SELECT 1" >/dev/null 2>&1'
+      interval: 15s
+      timeout: 10s
+      retries: 30
+      start_period: 60s
+
+  oracle:
+    image: container-registry.oracle.com/database/free:23.26.3.0-lite-arm64
+    platform: linux/arm64
+    container_name: bigdata-oracle
+    environment:
+      ORACLE_PWD: "${ORACLE_PASSWORD:?Configura docker/.env}"
+      HR_PASSWORD: "${HR_PASSWORD:?Configura docker/.env}"
+    ports:
+      - "127.0.0.1:1522:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ../data/original:/datasets:ro
+    shm_size: 1g
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "printf 'WHENEVER SQLERROR EXIT FAILURE\nALTER SESSION SET CONTAINER=FREEPDB1;\nSELECT 1 FROM dual;\nEXIT\n' | sqlplus -L -s / as sysdba >/dev/null 2>&1"
+      interval: 20s
+      timeout: 15s
+      retries: 30
+      start_period: 120s
+
+  mongodb:
+    image: mongo:8.0
+    platform: linux/arm64
+    container_name: bigdata-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bigdata_admin
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD:?Configura docker/.env}"
+    ports:
+      - "127.0.0.1:27020:27017"
+    volumes:
+      - mongodb-data:/data/db
+      - ../data/procesados:/datasets:ro
+      - ./mongo_verificar.js:/scripts/mongo_verificar.js:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'mongosh --quiet --username "$$MONGO_INITDB_ROOT_USERNAME" --password "$$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --eval "quit(db.adminCommand({ping:1}).ok === 1 ? 0 : 1)" >/dev/null 2>&1'
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+
+  analisis:
+    profiles: [analisis]
+    image: bigdata-python-odbc:local
+    platform: linux/amd64
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ..:/workspace
+    environment:
+      SQL_PASSWORD: "${SQL_PASSWORD:?Configura docker/.env}"
+      HR_PASSWORD: "${HR_PASSWORD:?Configura docker/.env}"
+      MONGO_PASSWORD: "${MONGO_PASSWORD:?Configura docker/.env}"
+      SQLSERVER_HOST: sqlserver,1433
+      ORACLE_SERVICE: oracle:1521/FREEPDB1
+      MONGODB_HOST: mongodb:27017
+      MPLCONFIGDIR: /workspace/.mplcache
+      PYTHONUNBUFFERED: "1"
+    entrypoint: [python, /workspace/docker/cliente.py]
+    command: [python, src/conexiones.py, verificar]
+
+volumes:
+  sqlserver-data:
+  oracle-data:
+  mongodb-data:

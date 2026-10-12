@@ -1,0 +1,160 @@
+{
+  "figures": [
+    {
+      "id": "N01",
+      "error": "",
+      "tag": "N01 · Ventas mensuales y tendencia"
+    },
+    {
+      "id": "N02",
+      "error": "",
+      "tag": "N02 · Mapa de calor: categoría y país"
+    },
+    {
+      "id": "N03",
+      "error": "",
+      "tag": "N03 · Top 10 clientes por volumen monetario"
+    },
+    {
+      "id": "N04",
+      "error": "",
+      "tag": "N04 · Evolución de ventas trimestrales"
+    },
+    {
+      "id": "N05",
+      "error": "",
+      "tag": "N05 · Treemap de productos por categoría"
+    },
+    {
+      "id": "N06",
+      "error": "",
+      "tag": "N06 · Dispersión: descuento y cantidad"
+    },
+    {
+      "id": "N07",
+      "error": "",
+      "tag": "N07 · Distribución de países de clientes"
+    },
+    {
+      "id": "N08",
+      "error": "",
+      "tag": "N08 · Box plot de precios por proveedor"
+    },
+    {
+      "id": "N09",
+      "error": "",
+      "tag": "N09 · Áreas: ventas acumuladas por empleado"
+    },
+    {
+      "id": "N10",
+      "error": "",
+      "tag": "N10 · Heatmap temporal de pedidos"
+    },
+    {
+      "id": "H01",
+      "error": "",
+      "tag": "H01 · Histograma salarial por departamento"
+    },
+    {
+      "id": "H02",
+      "error": "",
+      "tag": "H02 · Radar de perfiles de puesto"
+    },
+    {
+      "id": "H03",
+      "error": "",
+      "tag": "H03 · Organigrama interactivo"
+    },
+    {
+      "id": "H04",
+      "error": "",
+      "tag": "H04 · Mapa de calor de dotación por ubicación"
+    },
+    {
+      "id": "H05",
+      "error": "",
+      "tag": "H05 · Violín salarial por antigüedad"
+    },
+    {
+      "id": "H06",
+      "error": "",
+      "tag": "H06 · Sankey de cambios de departamento"
+    },
+    {
+      "id": "H07",
+      "error": "",
+      "tag": "H07 · Burbujas: salario y antigüedad"
+    },
+    {
+      "id": "H08",
+      "error": "",
+      "tag": "H08 · Densidad de contrataciones por mes"
+    },
+    {
+      "id": "H09",
+      "error": "",
+      "tag": "H09 · Donut de empleados por región"
+    },
+    {
+      "id": "H10",
+      "error": "",
+      "tag": "H10 · Waterfall de bandas salariales: escenario ilustrativo"
+    },
+    {
+      "id": "S01",
+      "error": "",
+      "tag": "S01 · Serie temporal de temperatura por ciudad"
+    },
+    {
+      "id": "S02",
+      "error": "",
+      "tag": "S02 · Mapa de calor geográfico de lecturas"
+    },
+    {
+      "id": "S03",
+      "error": "",
+      "tag": "S03 · Violines por tipo de sensor"
+    },
+    {
+      "id": "S04",
+      "error": "",
+      "tag": "S04 · Matriz de dispersión entre sensores"
+    },
+    {
+      "id": "S05",
+      "error": "",
+      "tag": "S05 · Áreas apiladas por ubicación"
+    },
+    {
+      "id": "S06",
+      "error": "",
+      "tag": "S06 · Detección de anomalías con MAD"
+    },
+    {
+      "id": "S07",
+      "error": "",
+      "tag": "S07 · Calendario de patrones diarios"
+    },
+    {
+      "id": "S08",
+      "error": "",
+      "tag": "S08 · Red de relaciones entre sensores"
+    },
+    {
+      "id": "S09",
+      "error": "",
+      "tag": "S09 · Dispersión 3D: valor, ubicación y tiempo"
+    },
+    {
+      "id": "S10",
+      "error": "",
+      "tag": "S10 · Dashboard de monitoreo simulado"
+    }
+  ],
+  "console_errors": [],
+  "country_filter": "USA seleccionado y curva actualizada",
+  "department_filter": "Shipping seleccionado y histograma actualizado",
+  "replay": "avanzó de 48 a 159; pausa y reinicio a 48 verificados",
+  "responsive": "390px sin desbordamiento horizontal",
+  "scope": "Interfaz local; no valida conexiones a gestores"
+}

@@ -1,0 +1,26 @@
+country_id,country_name,region_id
+AR,Argentina,20.0
+AU,Australia,40.0
+BE,Belgium,10.0
+BR,Brazil,20.0
+CA,Canada,20.0
+CH,Switzerland,10.0
+CN,China,30.0
+DE,Germany,10.0
+DK,Denmark,10.0
+EG,Egypt,50.0
+FR,France,10.0
+GB,United Kingdom of Great Britain and Northern Ireland,10.0
+IL,Israel,30.0
+IN,India,30.0
+IT,Italy,10.0
+JP,Japan,30.0
+KW,Kuwait,30.0
+ML,Malaysia,30.0
+MX,Mexico,20.0
+NG,Nigeria,50.0
+NL,Netherlands,10.0
+SG,Singapore,30.0
+US,United States of America,20.0
+ZM,Zambia,50.0
+ZW,Zimbabwe,50.0

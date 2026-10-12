@@ -1,0 +1,10 @@
+EmployeeID,FirstName,LastName,ReportsTo
+1,Nancy,Davolio,2.0
+2,Andrew,Fuller,
+3,Janet,Leverling,2.0
+4,Margaret,Peacock,2.0
+5,Steven,Buchanan,2.0
+6,Michael,Suyama,5.0
+7,Robert,King,5.0
+8,Laura,Callahan,2.0
+9,Anne,Dodsworth,5.0

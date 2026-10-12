@@ -1,0 +1,34 @@
+{
+  "nw": {
+    "orders": 830,
+    "lines": 2155,
+    "customers": 91,
+    "active_customers": 89,
+    "net": 1265793.0382871693,
+    "gross": 1354458.59,
+    "discount_amount": 88665.55171283064,
+    "period": [
+      "1996-07-04",
+      "1998-05-06"
+    ]
+  },
+  "hr": {
+    "employees": 107,
+    "salary_mean": 6461.8317757009345,
+    "salary_median": 6200.0,
+    "unassigned": 1,
+    "sum_salary": 691416.0
+  },
+  "sensors": {
+    "rows": 12960,
+    "stations": 6,
+    "sensors": 18,
+    "tp": 103,
+    "fp": 34,
+    "fn": 0,
+    "precision": 0.7518248175182481,
+    "recall": 1.0,
+    "alerts": 137,
+    "injected": 103
+  }
+}
