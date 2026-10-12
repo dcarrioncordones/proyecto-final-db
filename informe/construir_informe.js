@@ -263,7 +263,8 @@ add(P('La sección 2 describe la metodología y las herramientas. La sección 3 
 
 add(H3('Código fuente'));
 add(linkP('Todo el código, las consultas, los datos extraídos, el dashboard y este informe están en el repositorio ', REPO, '. El archivo `COMO_CORRER.md` explica paso a paso cómo reproducir el laboratorio y regenerar los resultados.'));
-add(linkP('El dashboard interactivo está publicado en ', DASH, ' y se abre en cualquier navegador, sin instalar nada.'));
+add(H3('Dashboard interactivo'));
+add(linkP('El dashboard está publicado en ', DASH, ' y se abre en cualquier navegador, sin instalar nada. Permite elegir la base de datos y cada una de sus diez visualizaciones, aplicar filtros, hacer zoom, inspeccionar valores al pasar el cursor y reproducir el monitoreo simulado de S10 (sección 7.2).'));
 
 // 2. Metodología
 add(H1('2. Metodología y herramientas'));
@@ -516,8 +517,8 @@ add(P('El notebook `Trabajo_final_Big_Data.ipynb` ejecuta las mismas etapas y mu
 
 // Anexo B
 add(H1('Anexo B. Código fuente y configuración'));
+add(H2('B.1 Repositorio'));
 add(linkP('El proyecto completo está publicado en ', REPO, '. La tabla resume los archivos principales.'));
-add(linkP('Dashboard en línea: ', DASH, ''));
 add(table(['Archivo', 'Contenido'], [
   ['sql/northwind.sql', 'Consultas de SQL Server por visualización (N01–N10)'],
   ['sql/hr.sql', 'Consultas de Oracle por visualización (H01–H10)'],
@@ -535,6 +536,8 @@ add(table(['Archivo', 'Contenido'], [
   ['config/.env.example, odbc.ini.example', 'Plantillas de conexión sin credenciales reales'],
   ['requirements.txt, README.md, COMO_CORRER.md', 'Dependencias e instrucciones de instalación y ejecución'],
 ], [2.6, 3.9]));
+add(H2('B.2 Dashboard en línea'));
+add(linkP('El dashboard (`dashboard/index.html`) está publicado con GitHub Pages en ', DASH, '. También puede abrirse localmente con doble clic desde la carpeta del proyecto, sin Internet ni servidor.'));
 
 // Anexo C
 if (!SIN_ANEXO_C) {
