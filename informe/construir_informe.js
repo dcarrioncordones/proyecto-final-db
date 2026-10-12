@@ -432,7 +432,7 @@ add(figure(cap('lab_integrar_fin'), 'Final de la integración: dashboard regener
 add(H2('7.2 Dashboard interactivo'));
 add(P('El dashboard (`dashboard/index.html`) organiza las 30 visualizaciones por base de datos. Un selector elige la base y otro la figura; los botones Anterior y Siguiente recorren las diez figuras. Cada vista muestra tres indicadores clave, el gráfico interactivo de Plotly (información al pasar el cursor, zoom, series activables desde la leyenda, treemap navegable y gráfico 3D rotable) y un panel con el método, el resultado, la decisión y el límite, además de la fórmula o el código [7].'));
 add(P('Hay filtros específicos en N01 (país), H01 (departamento), S06 y S10 (sensor). El aviso superior indica la procedencia de los datos: tras la integración, informa que se extrajeron de SQL Server, Oracle y MongoDB. El archivo incluye los datos y una copia local de Plotly, por lo que funciona sin Internet ni servidor.'));
-add(figure(dash('vista_general'), 'Vista general del dashboard en Safari: aviso de procedencia, selectores, filtro de país, indicadores y N01.', 6.3));
+add(figure(dash('vista_general'), 'Vista general del dashboard: aviso de procedencia, selectores, filtro de país, indicadores y N01.', 6.3));
 add(P('El monitoreo en tiempo real se simula en S10: con Reproducir, Pausar y Reiniciar, cada segundo agrega una hora histórica de un sensor a una ventana de 48 lecturas y muestra el umbral de alerta. No es *streaming* desde MongoDB, sino una reproducción de la serie extraída.'));
 add(figure(dash('vista_sensores_s10'), 'Dashboard de monitoreo simulado (S10) con controles de reproducción y filtro de sensor.', 6.3));
 add(H2('7.3 Pruebas de usabilidad'));
@@ -527,10 +527,15 @@ add(table(['Archivo', 'Contenido'], [
 
 // Anexo C
 add(H1('Anexo C. Capturas del dashboard'));
-add(P('Las capturas siguientes muestran la versión interactiva de cada visualización en el dashboard, con su panel explicativo. Se tomaron en Safari después de la integración con los tres gestores.'));
-viz.forEach((v, i) => {
-  if (i > 0 && i % 2 === 0) add(new d.Paragraph({ children: [new d.PageBreak()] }));
-  add(figure(dash(v.id), `Dashboard: ${v.id} · ${v.title}.`, 6.2, 3.8));
+add(P('Las capturas siguientes muestran la versión interactiva de cada visualización en el dashboard, con su panel explicativo. Se tomaron en Safari después de la integración con los tres gestores. Cada base comienza con una vista general que incluye el aviso de procedencia, los selectores y sus tres indicadores clave, comunes a sus diez visualizaciones.'));
+[['N', 'C.1 SQL Server / Northwind', 'vista_general'], ['H', 'C.2 Oracle / HR', 'vista_hr'], ['S', 'C.3 MongoDB / sensores', 'vista_sensores_s10']].forEach(([prefix, title, overview], g) => {
+  add(new d.Paragraph({ heading: d.HeadingLevel.HEADING_2, pageBreakBefore: true, keepNext: true, spacing: { before: 200, after: 120 }, children: [new d.TextRun(title)] }));
+  add(figure(dash(overview), `Dashboard: vista general de ${title.slice(4)} con indicadores clave.`, 6.2, 3.5));
+  // La vista general ocupa el lugar de una captura: luego, dos detalles por página.
+  vizOf(prefix).forEach((v, i) => {
+    if (i % 2 === 1) add(new d.Paragraph({ children: [new d.PageBreak()] }));
+    add(figure(dash(v.id), `Dashboard: ${v.id} · ${v.title}.`, 6.2, 3.5));
+  });
 });
 
 // ---------- índice ----------
