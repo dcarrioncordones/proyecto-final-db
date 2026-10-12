@@ -12,6 +12,7 @@ const PAGES = process.argv[2] && fs.existsSync(process.argv[2]) ? JSON.parse(fs.
 const NAVY = '1F3B5C', BLUE = '3A5F8A', GRAY = '333333', CAPTION = '555555', BORDER = 'BFC7D1', CODEBG = 'F3F4F6';
 const MONO = 'Consolas', HEAD = 'Arial', BODY = 'Calibri';
 const REPO = 'https://github.com/dcarrioncordones/proyecto-final-db';
+const DASH = 'https://dcarrioncordones.github.io/proyecto-final-db/dashboard/';
 const TEXT_W = 9360; // 6.5 in en DXA
 
 const viz = JSON.parse(fs.readFileSync(R('docs/visualizaciones.json')));
@@ -81,6 +82,11 @@ const linkP = (before, url, after = '', opts = {}) => new d.Paragraph({
 });
 const label = (text) => new d.Paragraph({ keepNext: true, spacing: { before: 120, after: 40 }, children: runs(text) });
 
+// Versión comprimida: IMG_DIR contiene copias optimizadas con la misma ruta relativa al proyecto.
+const IMG_DIR = process.env.IMG_DIR;
+// SIN_ANEXO_C=1 omite el Anexo C (capturas del dashboard) para reducir el tamaño del PDF.
+const SIN_ANEXO_C = process.env.SIN_ANEXO_C === '1';
+const imgPath = (file) => IMG_DIR && fs.existsSync(path.join(IMG_DIR, path.relative(ROOT, file))) ? path.join(IMG_DIR, path.relative(ROOT, file)) : file;
 function pngSize(file) {
   const b = fs.readFileSync(file);
   if (b[0] === 0x89) return [b.readUInt32BE(16), b.readUInt32BE(20)];
@@ -95,6 +101,7 @@ function pngSize(file) {
 }
 let figN = 0;
 function figure(file, caption, widthIn = 6.2, maxHeightIn = 7.6) {
+  file = imgPath(file);
   const [w, h] = pngSize(file);
   let wi = widthIn, hi = widthIn * h / w;
   if (hi > maxHeightIn) { hi = maxHeightIn; wi = hi * w / h; }
@@ -231,6 +238,7 @@ const cover = [
   ...[['Estudiante: ', 'Dan Carrión'], ['Matrícula: ', '1131022'], ['Asignatura: ', 'MCD512 · Big Data'], ['Docente: ', 'Prof. José M. Aquino Cepeda, MSc'], ['Pruebas realizadas: ', '11 de octubre de 2026'], ['Fecha de entrega: ', 'octubre de 2026']]
     .map(([k, v]) => new d.Paragraph({ alignment: d.AlignmentType.CENTER, spacing: { after: 80 }, children: [new d.TextRun({ text: k, bold: true, size: 24 }), new d.TextRun({ text: v, size: 24 })] })),
   new d.Paragraph({ alignment: d.AlignmentType.CENTER, spacing: { after: 80 }, children: [new d.TextRun({ text: 'Repositorio: ', bold: true, size: 24 }), new d.ExternalHyperlink({ link: REPO, children: [new d.TextRun({ text: REPO.replace('https://', ''), style: 'Hyperlink', size: 24 })] })] }),
+  new d.Paragraph({ alignment: d.AlignmentType.CENTER, spacing: { after: 80 }, children: [new d.TextRun({ text: 'Dashboard: ', bold: true, size: 24 }), new d.ExternalHyperlink({ link: DASH, children: [new d.TextRun({ text: DASH.replace('https://', '').replace(/\/$/, ''), style: 'Hyperlink', size: 24 })] })] }),
 ];
 
 const body = [];
@@ -251,10 +259,11 @@ add(bullets([
   'Validar la precisión de los cálculos con comprobaciones automáticas de sumas, claves y reglas estadísticas.',
 ]));
 add(H3('Organización del informe'));
-add(P('La sección 2 describe la metodología y las herramientas. La sección 3 documenta el laboratorio en Docker y la configuración de las conexiones. Las secciones 4, 5 y 6 corresponden a cada gestor: descripción de la base, carga, evidencia de conexión, diez visualizaciones y los *insights* obtenidos. La sección 7 presenta la extracción integrada, las validaciones y el dashboard; la 8 discute los resultados y la 9 resume las conclusiones. Los anexos contienen los pasos de reproducción, el inventario del código fuente y las capturas del dashboard.'));
+add(P('La sección 2 describe la metodología y las herramientas. La sección 3 documenta el laboratorio en Docker y la configuración de las conexiones. Las secciones 4, 5 y 6 corresponden a cada gestor: descripción de la base, carga, evidencia de conexión, diez visualizaciones y los *insights* obtenidos. La sección 7 presenta la extracción integrada, las validaciones y el dashboard; la 8 discute los resultados y la 9 resume las conclusiones. ' + (SIN_ANEXO_C ? 'Los anexos contienen los pasos de reproducción y el inventario del código fuente.' : 'Los anexos contienen los pasos de reproducción, el inventario del código fuente y las capturas del dashboard.')));
 
 add(H3('Código fuente'));
 add(linkP('Todo el código, las consultas, los datos extraídos, el dashboard y este informe están en el repositorio ', REPO, '. El archivo `COMO_CORRER.md` explica paso a paso cómo reproducir el laboratorio y regenerar los resultados.'));
+add(linkP('El dashboard interactivo está publicado en ', DASH, ' y se abre en cualquier navegador, sin instalar nada.'));
 
 // 2. Metodología
 add(H1('2. Metodología y herramientas'));
@@ -432,11 +441,12 @@ add(figure(cap('lab_integrar_fin'), 'Final de la integración: dashboard regener
 add(H2('7.2 Dashboard interactivo'));
 add(P('El dashboard (`dashboard/index.html`) organiza las 30 visualizaciones por base de datos. Un selector elige la base y otro la figura; los botones Anterior y Siguiente recorren las diez figuras. Cada vista muestra tres indicadores clave, el gráfico interactivo de Plotly (información al pasar el cursor, zoom, series activables desde la leyenda, treemap navegable y gráfico 3D rotable) y un panel con el método, el resultado, la decisión y el límite, además de la fórmula o el código [7].'));
 add(P('Hay filtros específicos en N01 (país), H01 (departamento), S06 y S10 (sensor). El aviso superior indica la procedencia de los datos: tras la integración, informa que se extrajeron de SQL Server, Oracle y MongoDB. El archivo incluye los datos y una copia local de Plotly, por lo que funciona sin Internet ni servidor.'));
+add(linkP('Para facilitar su consulta, el dashboard se publicó con GitHub Pages en ', DASH, '. Esa página sirve el mismo archivo del repositorio, con los datos extraídos de los tres gestores; no se conecta a las bases en tiempo real.'));
 add(figure(dash('vista_general'), 'Vista general del dashboard: aviso de procedencia, selectores, filtro de país, indicadores y N01.', 6.3));
 add(P('El monitoreo en tiempo real se simula en S10: con Reproducir, Pausar y Reiniciar, cada segundo agrega una hora histórica de un sensor a una ventana de 48 lecturas y muestra el umbral de alerta. No es *streaming* desde MongoDB, sino una reproducción de la serie extraída.'));
 add(figure(dash('vista_sensores_s10'), 'Dashboard de monitoreo simulado (S10) con controles de reproducción y filtro de sensor.', 6.3));
 add(H2('7.3 Pruebas de usabilidad'));
-add(P('Se recorrieron las 30 visualizaciones en el navegador, verificando que cada una se dibuja sin errores, y se probaron los filtros, la navegación y los controles de reproducción. En la revisión, el mapa de S02 aparecía en blanco: las seis estaciones tienen el mismo número de lecturas, por lo que la escala de densidad quedaba sin rango y Plotly no dibujaba nada. Se reemplazó por un gráfico de estaciones en longitud y latitud a igual escala, coloreado por número de lecturas, que además funciona sin mapas externos. El diseño apila los paneles en pantallas estrechas y los controles tienen etiquetas y foco visible para el teclado. El Anexo C reúne las capturas de las 30 vistas.'));
+add(P('Se recorrieron las 30 visualizaciones en el navegador, verificando que cada una se dibuja sin errores, y se probaron los filtros, la navegación y los controles de reproducción. En la revisión, el mapa de S02 aparecía en blanco: las seis estaciones tienen el mismo número de lecturas, por lo que la escala de densidad quedaba sin rango y Plotly no dibujaba nada. Se reemplazó por un gráfico de estaciones en longitud y latitud a igual escala, coloreado por número de lecturas, que además funciona sin mapas externos. El diseño apila los paneles en pantallas estrechas y los controles tienen etiquetas y foco visible para el teclado.' + (SIN_ANEXO_C ? ' Las 30 vistas pueden explorarse en el dashboard publicado (sección 7.2).' : ' El Anexo C reúne las capturas de las 30 vistas.')));
 
 // 8. Discusión
 add(H1('8. Discusión y recomendaciones'));
@@ -507,6 +517,7 @@ add(P('El notebook `Trabajo_final_Big_Data.ipynb` ejecuta las mismas etapas y mu
 // Anexo B
 add(H1('Anexo B. Código fuente y configuración'));
 add(linkP('El proyecto completo está publicado en ', REPO, '. La tabla resume los archivos principales.'));
+add(linkP('Dashboard en línea: ', DASH, ''));
 add(table(['Archivo', 'Contenido'], [
   ['sql/northwind.sql', 'Consultas de SQL Server por visualización (N01–N10)'],
   ['sql/hr.sql', 'Consultas de Oracle por visualización (H01–H10)'],
@@ -526,6 +537,7 @@ add(table(['Archivo', 'Contenido'], [
 ], [2.6, 3.9]));
 
 // Anexo C
+if (!SIN_ANEXO_C) {
 add(H1('Anexo C. Capturas del dashboard'));
 add(P('Las capturas siguientes muestran la versión interactiva de cada visualización en el dashboard, con su panel explicativo. Se tomaron en Safari después de la integración con los tres gestores. Cada base comienza con una vista general que incluye el aviso de procedencia, los selectores y sus tres indicadores clave, comunes a sus diez visualizaciones.'));
 [['N', 'C.1 SQL Server / Northwind', 'vista_general'], ['H', 'C.2 Oracle / HR', 'vista_hr'], ['S', 'C.3 MongoDB / sensores', 'vista_sensores_s10']].forEach(([prefix, title, overview], g) => {
@@ -537,6 +549,7 @@ add(P('Las capturas siguientes muestran la versión interactiva de cada visualiz
     add(figure(dash(v.id), `Dashboard: ${v.id} · ${v.title}.`, 6.2, 3.5));
   });
 });
+}
 
 // ---------- índice ----------
 const toc = [
@@ -573,7 +586,7 @@ const doc = new d.Document({
     { properties: { page: { ...page, pageNumbers: { start: 1 } } }, footers: { default: footer }, children: [...toc, ...body] },
   ],
 });
-const out = R('informe/salida/Trabajo_final_Big_Data_Dan_Carrion.docx');
+const out = R('informe/salida', `Trabajo_final_Big_Data_Dan_Carrion${process.env.OUT_SUFFIX || ''}.docx`);
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(R('informe/salida/encabezados.json'), JSON.stringify(headings.map(h => h.text)));
 d.Packer.toBuffer(doc).then(b => { fs.writeFileSync(out, b); console.log('Informe Word:', out, '| figuras:', figN); });

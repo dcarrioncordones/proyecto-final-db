@@ -14,7 +14,7 @@ Se construyen **30 visualizaciones** (diez por gestor) a partir de tres bases de
 ## Entregables
 
 - **Informe:** [`informe/salida/Trabajo_final_Big_Data_Dan_Carrion.pdf`](informe/salida/Trabajo_final_Big_Data_Dan_Carrion.pdf) (también en `.docx`).
-- **Dashboard interactivo:** [`dashboard/index.html`](dashboard/index.html). Se abre con doble clic; no necesita Internet, servidor ni las bases encendidas.
+- **Dashboard interactivo en línea:** <https://dcarrioncordones.github.io/proyecto-final-db/dashboard/>. También se puede abrir localmente con doble clic en [`dashboard/index.html`](dashboard/index.html); no necesita Internet, servidor ni las bases encendidas.
 - **Notebook:** [`Trabajo_final_Big_Data.ipynb`](Trabajo_final_Big_Data.ipynb).
 - **Consultas:** [`sql/northwind.sql`](sql/northwind.sql), [`sql/hr.sql`](sql/hr.sql) y [`mongo/consultas.js`](mongo/consultas.js).
 
