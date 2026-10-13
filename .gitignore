@@ -12,3 +12,6 @@ captures/
 # Generados: paquete de entrega y auxiliares del índice del informe
 MANIFEST.sha256
 informe/salida/*.json
+# Versiones reducidas del informe para la entrega (sólo locales)
+informe/salida/*_comprimido.*
+informe/salida/*_sin_anexo.*
