@@ -259,7 +259,7 @@ add(bullets([
   'Validar la precisión de los cálculos con comprobaciones automáticas de sumas, claves y reglas estadísticas.',
 ]));
 add(H3('Organización del informe'));
-add(P('La sección 2 describe la metodología y las herramientas. La sección 3 documenta el laboratorio en Docker y la configuración de las conexiones. Las secciones 4, 5 y 6 corresponden a cada gestor: descripción de la base, carga, evidencia de conexión, diez visualizaciones y los *insights* obtenidos. La sección 7 presenta la extracción integrada, las validaciones y el dashboard; la 8 discute los resultados y la 9 resume las conclusiones. ' + (SIN_ANEXO_C ? 'Los anexos contienen los pasos de reproducción y el inventario del código fuente.' : 'Los anexos contienen los pasos de reproducción, el inventario del código fuente y las capturas del dashboard.')));
+add(P('La sección 2 describe la metodología y las herramientas. La sección 3 documenta el laboratorio en Docker y la configuración de las conexiones. Las secciones 4, 5 y 6 corresponden a cada gestor: descripción de la base, carga, evidencia de conexión, diez visualizaciones y los *insights* obtenidos. La sección 7 presenta la extracción integrada, las validaciones y el dashboard; la 8 discute los resultados y la 9 resume las conclusiones. ' + (SIN_ANEXO_C ? 'Los anexos contienen los pasos de reproducción, el inventario del código fuente y los enlaces al repositorio y al dashboard.' : 'Los anexos contienen los pasos de reproducción, el inventario del código fuente, los enlaces al repositorio y al dashboard, y las capturas del dashboard.')));
 
 add(H3('Código fuente'));
 add(linkP('Todo el código, las consultas, los datos extraídos, el dashboard y este informe están en el repositorio ', REPO, '. El archivo `COMO_CORRER.md` explica paso a paso cómo reproducir el laboratorio y regenerar los resultados.'));
@@ -351,7 +351,7 @@ add(table(['Tabla', 'Filas', 'Uso en el análisis'], [
   ['Employees / Suppliers', '9 / 29', 'Ventas por empleado y precios por proveedor'],
 ], [2, 1, 3.5]));
 add(H2('4.2 Instalación y carga'));
-add(P('`lab.py iniciar sqlserver` crea el contenedor y espera a que el *healthcheck* ejecute `SELECT 1` con sqlcmd. Después, `lab.py cargar sqlserver` crea la base vacía `Northwind` y ejecuta el script oficial `instnwnd.sql`; al terminar verifica los conteos de las siete tablas principales.'));
+add(P('`lab.py iniciar sqlserver` crea el contenedor a partir de la imagen oficial de SQL Server para Linux [8] y espera a que el *healthcheck* ejecute `SELECT 1` con sqlcmd. Después, `lab.py cargar sqlserver` crea la base vacía `Northwind` y ejecuta el script oficial `instnwnd.sql`; al terminar verifica los conteos de las siete tablas principales.'));
 add(figure(cap('sql_iniciar'), 'Creación del contenedor de SQL Server y estado healthy en el puerto 1434.', 6.4));
 add(figure(cap('carga_sqlserver'), 'Carga de Northwind: 830 pedidos y 2,155 líneas.', 4.4));
 add(H2('4.3 Conexión ODBC y evidencia'));
@@ -381,7 +381,7 @@ add(table(['Tabla', 'Filas', 'Uso en el análisis'], [
 ], [2.3, 1.1, 3.1]));
 add(P('HR no contiene edad, género, competencias, evaluaciones de desempeño, bajas ni salarios históricos. Por eso la "distribución demográfica" se aborda con la ubicación de los departamentos, el radar compara métricas estructurales de los puestos y el waterfall se presenta como escenario de bandas salariales, no como una carrera real.'));
 add(H2('5.2 Instalación y carga'));
-add(P('El primer arranque de Oracle descarga la imagen Lite y crea la base de datos; el *healthcheck* comprueba que la PDB `FREEPDB1` responda. `lab.py cargar oracle` crea el usuario HR y ejecuta como HR los scripts oficiales `hr_create.sql`, `hr_populate.sql` y `hr_code.sql`.'));
+add(P('El primer arranque de Oracle descarga la imagen Lite del registro oficial de Oracle [9] y crea la base de datos; el *healthcheck* comprueba que la PDB `FREEPDB1` responda. `lab.py cargar oracle` crea el usuario HR y ejecuta como HR los scripts oficiales `hr_create.sql`, `hr_populate.sql` y `hr_code.sql`.'));
 add(figure(cap('oracle_iniciar'), 'Descarga de la imagen de Oracle Database Free Lite y contenedor healthy.', 4.4));
 add(P('**Incidencia y solución.** La primera carga falló con `ORA-00959: tablespace \'USERS\' does not exist`: la variante Lite de la imagen no incluye ese tablespace, que el esquema HR usa por defecto. El error ocurrió antes de crear el usuario, por lo que no quedaron objetos a medias. Se modificó el cargador para crear el tablespace cuando falta y se repitió la carga:'));
 add(code(`CREATE TABLESPACE users
@@ -399,7 +399,7 @@ add(H2('5.5 Insights obtenidos de HR'));
 add(bullets([
   '**Compensación.** El salario mediano es 6,200.00 y el promedio 6,461.83, con un máximo de 24,000.00: la distribución tiene cola hacia salarios altos concentrados en puestos directivos.',
   '**Antigüedad y salario.** La correlación es moderada (r = 0.415). La antigüedad mediana es 10.76 años; la mayoría de la plantilla (66 empleados) tiene entre 9 y 12 años.',
-  '**Estructura.** El organigrama tiene una sola raíz y una profundidad máxima de 3 niveles para 107 empleados: una estructura plana con amplitudes de supervisión grandes en algunos gerentes.',
+  '**Estructura.** El organigrama tiene una sola raíz y tres niveles por debajo del presidente para 107 empleados: una estructura plana con amplitudes de supervisión grandes en algunos gerentes.',
   '**Ubicación.** South San Francisco concentra 45 empleados y Americas el 65.4% de la plantilla; un empleado no tiene departamento ni ubicación, lo que señala un problema de calidad de datos.',
   '**Movilidad.** Sólo 7 empleados tienen historial (10 transiciones, 4 con cambio de departamento): no alcanza para estimar rotación, pero sí para formular preguntas sobre movilidad interna.',
 ]));
@@ -468,7 +468,7 @@ add(P('En cuanto a fechas, todas las agregaciones de sensores declaran la zona h
 // 9. Conclusiones
 add(H1('9. Conclusiones'));
 add(P('Se establecieron las tres conexiones requeridas: SQL Server y Oracle mediante ODBC (Microsoft ODBC Driver 18 y Oracle Instant Client ODBC) y MongoDB mediante PyMongo, todas verificadas con consultas reales sobre tablas y colecciones del trabajo. Los datos de las 30 visualizaciones provienen de esas conexiones, con procedencia trazable por hash.'));
-add(P('Las visualizaciones cubren los requisitos de cada gestor: ventas, clientes, empleados, tendencias y productos en Northwind; compensación, ubicación, estructura, movilidad y desempeño por departamento en HR; y series temporales, patrones por ubicación, anomalías, correlaciones y monitoreo simulado en los sensores. Cada figura explica su método, resultado, decisión y límite, y su precisión se respalda con 17 comprobaciones automáticas.'));
+add(P('Las visualizaciones cubren los requisitos de cada gestor: ventas, clientes, empleados, tendencias y productos en Northwind; compensación, ubicación, estructura, movilidad y comparaciones por departamento en HR; y series temporales, patrones por ubicación, anomalías, correlaciones y monitoreo simulado en los sensores. Cada figura explica su método, resultado, decisión y límite, y su precisión se respalda con 17 comprobaciones automáticas.'));
 add(P('La principal lección metodológica es mantener coherencia entre lo que contiene la fuente y lo que comunica el gráfico: el ingreso no se presenta como utilidad, las métricas estructurales no se presentan como competencias, los cambios registrados no se extrapolan a rotación y la reproducción histórica no se presenta como *streaming*. El laboratorio en Docker, la extracción automatizada y el dashboard sin dependencias permiten reproducir todo el trabajo con unos pocos comandos.'));
 
 // Referencias
