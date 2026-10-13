@@ -287,15 +287,14 @@ add(table(['Componente', 'Versión / detalle', 'Uso en el trabajo'], [
   ['Entornos', 'Jupyter Notebook y scripts Python; Safari para el dashboard', 'Ejecución reproducible y revisión'],
 ], [1.3, 2.6, 2.1]));
 add(H2('2.2 Definiciones y criterios de calidad'));
-add(P('Las métricas se definieron antes de construir las figuras para evitar ambigüedades entre fuentes:'));
-add(bullets([
-  '**Venta neta de línea** = UnitPrice × Quantity × (1 − Discount), con el precio histórico de *Order Details* y no el precio actual del catálogo. La venta bruta total es 1,354,458.59 y la reducción por descuentos, 88,665.55.',
-  '**Antigüedad** = (fecha de referencia 08/10/2026 − hire_date) / 365.25 años. Las uniones izquierdas conservan al empleado sin departamento.',
-  '**Fechas de sensores**: se almacenan como BSON Date en UTC y se agrupan en la zona America/Santo_Domingo.',
-  '**Atípicos**: una lectura es alerta si |valor − mediana| / (1.4826 × MAD) > 3.5, con mediana y MAD calculadas por sensor y hora del día [11].',
-  '**Claves sin duplicación**: línea de venta = OrderID + ProductID; lectura = sensor_id + timestamp.',
-]));
-add(P('La precisión de las visualizaciones se valida con 17 comprobaciones automáticas (`src/validar.py`): conciliación de ventas por mes, cliente, categoría y empleado; conservación de los 107 empleados; existencia de supervisores sin ciclos; unicidad temporal por sensor; cobertura de 720 lecturas por sensor; reproducción de la regla MAD y de su matriz de confusión. Las 17 resultaron correctas sobre los datos extraídos.'));
+add(P('Las métricas se definieron antes de construir las figuras para evitar ambigüedades. La tabla resume, para cada base de datos, las definiciones aplicadas y las comprobaciones automáticas de `src/validar.py` que validan la precisión de sus visualizaciones.'));
+add(table(['Base de datos', 'Definiciones y reglas', 'Comprobaciones automáticas'], [
+  ['Northwind (SQL Server)', '**Venta neta de línea** = UnitPrice × Quantity × (1 − Discount), con el precio histórico de *Order Details* y no el precio actual del catálogo. Venta bruta total: 1,354,458.59; reducción por descuentos: 88,665.55. **Clave de línea**: OrderID + ProductID.', '5: uniones que no multiplican líneas; clave de línea única; fórmula de venta neta; ventas que concilian por mes, cliente, categoría y empleado; descuentos entre 0 y 1.'],
+  ['HR (Oracle)', '**Antigüedad** = (fecha de referencia 08/10/2026 − hire_date) / 365.25 años. Las uniones izquierdas conservan al empleado sin departamento.', '4: conservación de los 107 empleados; existencia de supervisores; organigrama sin ciclos; salarios positivos.'],
+  ['Sensores (MongoDB)', '**Fechas**: BSON Date en UTC, agrupadas en la zona America/Santo_Domingo. **Atípico**: |valor − mediana| / (1.4826 × MAD) > 3.5, con mediana y MAD por sensor y hora del día [11]. **Clave de lectura**: sensor_id + timestamp.', '6: clave sensor-tiempo única; sin nulos en campos críticos; 720 lecturas por sensor; puntaje MAD finito; regla de alertas reproducible; matriz de confusión que concilia.'],
+  ['Generales', 'Las figuras PNG y las interactivas se calculan sobre las mismas tablas.', '2: treinta visualizaciones generadas; archivos de figura válidos.'],
+], [1.4, 2.9, 2.2]));
+add(P('Las 17 comprobaciones resultaron correctas sobre los datos extraídos de los tres gestores.'));
 add(P('Para la accesibilidad se usan paletas distinguibles para daltonismo, etiquetas y leyendas en todos los gráficos, y la información principal también se expresa en texto, de modo que el color no es la única vía de lectura.'));
 
 // 3. Laboratorio
